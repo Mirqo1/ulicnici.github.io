@@ -10,14 +10,34 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
 body { background-color: var(--bg-light); color: var(--text-main); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
 
-/* Hlavička s vyhľadávaním */
-header { background-color: var(--bg-card); border-bottom: 1px solid #e5e7eb; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-.header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+/* HLAVIČKA A VYHĽADÁVANIE */
+header { background-color: var(--bg-card); border-bottom: 1px solid #e5e7eb; padding: 20px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    display: flex;
+    justify-content: center; /* Drží nadpis v strede */
+    align-items: center;
+}
+
 header h1 { font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; color: var(--text-main); font-weight: 800; margin: 0; }
 header h1 span { color: var(--accent-sport); }
 
-/* Vyhľadávací formulár */
-.search-form { display: flex; align-items: center; background: var(--bg-light); border-radius: 20px; padding: 5px 15px; border: 1px solid #e5e7eb; width: 250px; }
+.search-form {
+    position: absolute;
+    right: 20px; /* Zarovná lupu s pravým okrajom článkov */
+    display: flex;
+    align-items: center;
+    background: var(--bg-light);
+    border-radius: 20px;
+    padding: 5px 15px;
+    border: 1px solid #e5e7eb;
+    width: 250px;
+}
+
 .search-form input { border: none; background: transparent; outline: none; padding: 5px; font-size: 0.95rem; color: var(--text-main); width: 100%; }
 .search-form button { background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; transition: 0.2s; padding-left: 5px; }
 .search-form button:hover { color: var(--accent-sport); }
@@ -95,9 +115,11 @@ footer { background-color: var(--bg-card); text-align: center; padding: 25px; co
     .featured-post { height: 350px; }
     #post-full-title { font-size: 2rem; }
 }
+@media (max-width: 768px) {
+    .header-container { flex-direction: column; justify-content: center; text-align: center; }
+    .search-form { position: relative; right: auto; margin-top: 15px; width: 100%; max-width: 300px; }
+}
 @media (max-width: 600px) {
-    .header-content { flex-direction: column; justify-content: center; text-align: center; }
-    .search-form { width: 100%; max-width: 300px; }
     .older-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .older-card { height: 220px; }
     .featured-post { height: 280px; }
