@@ -1,5 +1,6 @@
 [
   {
+    "id": "nas-prvy-jarny-polmaraton",
     "title": "Náš prvý jarný polmaratón",
     "date": "4. Jún 2026",
     "author": "Michal",
@@ -8,6 +9,7 @@
     "content": "<p>Sezóna sa oficiálne začala! Tento víkend sme sa ako partia uličníkov postavili na štart nášho obľúbeného mestského behu. Príprava bola tvrdá, no oplatilo sa.</p><p>Prvých 10 kilometrov sa nám bežalo extrémne ľahko, držali sme tempo 4:45 min/km. Kríza prišla až okolo 17. kilometra, ale diváci popri trati nás nenechali spomaliť. V cieli z toho bol nový osobák!</p>"
   },
   {
+    "id": "recenzia-karbonove-topanky",
     "title": "Recenzia: Sú karbónové topánky podvod?",
     "date": "28. Máj 2026",
     "author": "Uličníci",
@@ -16,6 +18,7 @@
     "content": "<p>Karbónové topánky dnes vidíme na nohách takmer každého bežca. Rozhodli sme sa zistiť, či skutočne pomáhajú, alebo je to len marketingový ťah.</p><div class='flex-row'><img src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500' alt='Topanky'><p><strong>Tu je fotka z nášho testovania na dráhe.</strong> Ako vidíte, sklon topánky vás podvedome núti dopadať na špičku. Pri behu sme cítili výraznejší odraz (tzv. trampolínový efekt), vďaka čomu sme ušetrili cenné sekundy na kilometer.</p></div>"
   },
   {
+    "id": "ako-spravne-dychat-pri-behu",
     "title": "Ako správne dýchať pri behu v meste",
     "date": "15. Máj 2026",
     "author": "Katka",
@@ -24,6 +27,7 @@
     "content": "<p>Správne dýchanie je kľúčom k dlhému behu bez bolesti. Veľa začiatočníkov robí chybu, že dýcha príliš plytko a rýchlo. My v meste využívame overený rytmus 2:2 – dva kroky nádych, dva kroky výdych.</p>"
   },
   {
+    "id": "top-5-bezeckych-tras",
     "title": "Top 5 bežeckých trás v našom okolí",
     "date": "02. Máj 2026",
     "author": "Marek",
@@ -32,6 +36,7 @@
     "content": "<p>Behanie po tom istom chodníku začne byť po čase stereotyp. Preto sme pre teba zmapovali 5 najlepších mestských a lesných trás, kde stretneš minimum áut a užiješ si skvelý beh.</p>"
   },
   {
+    "id": "ranny-vs-vecerny-beh",
     "title": "Ranný vs. večerný beh: Čo je lepšie?",
     "date": "20. Apríl 2026",
     "author": "Uličníci",
@@ -40,11 +45,21 @@
     "content": "<p>Je lepšie naštartovať telo ráno nalačno, alebo zo seba vybehať stres po celom dni v práci? Každá možnosť má niečo do seba, no dôležité je prispôsobiť to tvojmu biorytmu.</p>"
   },
   {
+    "id": "strava-a-garmin",
     "title": "Strava a Garmin: Ako z nich vyžmýkať maximum",
     "date": "05. Apríl 2026",
     "author": "Michal",
     "image": "https://images.unsplash.com/photo-1510017803434-a899398421b3?w=500",
     "excerpt": "Používaš športové hodinky len na stopovanie času? Ukážeme ti, ktoré štatistiky naozaj sledovať.",
     "content": "<p>Sledovanie kilometrov je len začiatok. V tomto článku sa pozrieme na analýzu tepových zón a to, ako ti aplikácia Strava môže pomôcť sledovať tvoju dlhodobú kondíciu bez toho, aby si sa pretrénoval.</p>"
+  },
+  {
+    "id": "dogtrekking-havinoslap-2013",
+    "title": "Dogtrekking Havinošľap 2013 - 85 km (18.7 - 21.7.2013)",
+    "date": "22. Júl 2013",
+    "author": "Michal",
+    "image": "https://images.unsplash.com/photo-1534361960057-19889db9621e?w=800",
+    "excerpt": "Dogtrekking Havinošľap patrirí medzi moje obľúbené akcie. Nakoľko sa mi minulého roku kvôli problémom s nohou nepodarilo zúčastniť súťažne...",
+    "content": "<p>Dogtrekking Havinošľap patrí medzi moje obľúbené akcie...</p>"
   }
 ]
