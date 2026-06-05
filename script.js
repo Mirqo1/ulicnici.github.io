@@ -81,3 +81,49 @@ function changePage(direction) {
         olderContainer.scrollIntoView({ behavior: 'smooth' });
     }
 }
+
+// 4. ZOBRAZENIE DETAILU ČLÁNKU
+function viewPost(realIndex) {
+    const post = allPosts[realIndex];
+    
+    const blogLayout = document.getElementById('blog-layout');
+    const singlePost = document.getElementById('single-post');
+    
+    if (blogLayout) blogLayout.style.display = 'none';
+    if (singlePost) singlePost.style.display = 'block';
+    
+    // Zobrazenie všetkých tlačidiel Späť (horné aj spodné)
+    const backButtons = document.querySelectorAll('.back-btn');
+    backButtons.forEach(btn => btn.style.display = 'block');
+    
+    // Naplnenie dátami
+    const titleElem = document.getElementById('post-full-title');
+    const metaElem = document.getElementById('post-full-meta');
+    const bodyElem = document.getElementById('post-full-body');
+    
+    if (titleElem) titleElem.innerText = post.title;
+    if (metaElem) metaElem.innerText = `Publikované: ${post.date} | Autor: ${post.author}`;
+    if (bodyElem) bodyElem.innerHTML = post.content;
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 5. NÁVRAT NA ZOZNAM ČLÁNKOV
+function showGrid() {
+    const blogLayout = document.getElementById('blog-layout');
+    const singlePost = document.getElementById('single-post');
+    
+    if (blogLayout) blogLayout.style.display = 'flex';
+    if (singlePost) singlePost.style.display = 'none';
+    
+    // Skrytie tlačidiel Späť
+    const backButtons = document.querySelectorAll('.back-btn');
+    backButtons.forEach(btn => btn.style.display = 'none');
+    
+    // Reset textov na tlačidlách zdieľania
+    const copyBtn = document.getElementById('copy-btn');
+    const igBtn = document.getElementById('ig-btn');
+    
+    if (copyBtn) copyBtn.innerText = 'Skopírovať odkaz';
+    if (igBtn) igBtn.innerText = 'Instagram';
+}
