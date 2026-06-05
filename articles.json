@@ -1,0 +1,50 @@
+[
+  {
+    "title": "Náš prvý jarný polmaratón",
+    "date": "4. Jún 2026",
+    "author": "Michal",
+    "image": "https://images.unsplash.com/photo-1502224562085-639556652f33?w=800",
+    "excerpt": "Cez víkend sme rozbili bežecké topánky na mestskom polmaratóne. Počasie bolo ideálne a padli aj osobné rekordy.",
+    "content": "<p>Sezóna sa oficiálne začala! Tento víkend sme sa ako partia uličníkov postavili na štart nášho obľúbeného mestského behu. Príprava bola tvrdá, no oplatilo sa.</p><p>Prvých 10 kilometrov sa nám bežalo extrémne ľahko, držali sme tempo 4:45 min/km. Kríza prišla až okolo 17. kilometra, ale diváci popri trati nás nenechali spomaliť. V cieli z toho bol nový osobák!</p>"
+  },
+  {
+    "title": "Recenzia: Sú karbónové topánky podvod?",
+    "date": "28. Máj 2026",
+    "author": "Uličníci",
+    "image": "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500",
+    "excerpt": "Otestovali sme najnovší model s karbónovou platňou. Oplatí sa investovať vyše 200 eur?",
+    "content": "<p>Karbónové topánky dnes vidíme na nohách takmer každého bežca. Rozhodli sme sa zistiť, či skutočne pomáhajú, alebo je to len marketingový ťah.</p><div class='flex-row'><img src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500' alt='Topanky'><p><strong>Tu je fotka z nášho testovania na dráhe.</strong> Ako vidíte, sklon topánky vás podvedome núti dopadať na špičku. Pri behu sme cítili výraznejší odraz (tzv. trampolínový efekt), vďaka čomu sme ušetrili cenné sekundy na kilometer.</p></div>"
+  },
+  {
+    "title": "Ako správne dýchať pri behu v meste",
+    "date": "15. Máj 2026",
+    "author": "Katka",
+    "image": "https://images.unsplash.com/photo-1486218119243-13883505764c?w=500",
+    "excerpt": "Pichá ťa často v boku? Pozri sa na našu techniku dýchania 2:2, ktorá ti predĺži výdrž.",
+    "content": "<p>Správne dýchanie je kľúčom k dlhému behu bez bolesti. Veľa začiatočníkov robí chybu, že dýcha príliš plytko a rýchlo. My v meste využívame overený rytmus 2:2 – dva kroky nádych, dva kroky výdych.</p>"
+  },
+  {
+    "title": "Top 5 bežeckých trás v našom okolí",
+    "date": "02. Máj 2026",
+    "author": "Marek",
+    "image": "https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=500",
+    "excerpt": "Zabudni na nudné krúženie na štadióne. Tieto trasy ťa prekvapia skvelým povrchom a prírodou.",
+    "content": "<p>Behanie po tom istom chodníku začne byť po čase stereotyp. Preto sme pre teba zmapovali 5 najlepších mestských a lesných trás, kde stretneš minimum áut a užiješ si skvelý beh.</p>"
+  },
+  {
+    "title": "Ranný vs. večerný beh: Čo je lepšie?",
+    "date": "20. Apríl 2026",
+    "author": "Uličníci",
+    "image": "https://images.unsplash.com/photo-1530143311094-34d807799e8f?w=500",
+    "excerpt": "Niekto nedá dopustiť na východ slnka, iný behá s čelovkou. Rozobrali sme výhody oboch táborov.",
+    "content": "<p>Je lepšie naštartovať telo ráno nalačno, alebo zo seba vybehať stres po celom dni v práci? Každá možnosť má niečo do seba, no dôležité je prispôsobiť to tvojmu biorytmu.</p>"
+  },
+  {
+    "title": "Strava a Garmin: Ako z nich vyžmýkať maximum",
+    "date": "05. Apríl 2026",
+    "author": "Michal",
+    "image": "https://images.unsplash.com/photo-1510017803434-a899398421b3?w=500",
+    "excerpt": "Používaš športové hodinky len na stopovanie času? Ukážeme ti, ktoré štatistiky naozaj sledovať.",
+    "content": "<p>Sledovanie kilometrov je len začiatok. V tomto článku sa pozrieme na analýzu tepových zón a to, ako ti aplikácia Strava môže pomôcť sledovať tvoju dlhodobú kondíciu bez toho, aby si sa pretrénoval.</p>"
+  }
+]
