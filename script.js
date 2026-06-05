@@ -83,7 +83,7 @@ function renderBlog() {
         return;
     }
 
-    // Najnovší (alebo najrelevantnejší vyhľadaný) článok je VŽDY zobrazený ako veľký banner hore
+    // Najnovší (alebo najrelevantnejší vyhľadaný) článok sa VŽDY zobrazí v bannery
     const featured = filteredPosts[0];
     const urlParams = new URLSearchParams(window.location.search);
     const isSearching = urlParams.has('q');
@@ -133,7 +133,6 @@ function renderBlog() {
     }
 }
 
-// Odošle vyhľadávanie
 function handleSearch(e) {
     e.preventDefault();
     const query = document.getElementById('search-input').value.trim();
@@ -155,7 +154,8 @@ function changePage(direction) {
     }
     
     navigateTo(newPath);
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    // Presunie užívateľa naspäť navrch (k veľkému banneru), keď prejde na ďalšiu stranu
+    window.scrollTo({top: 0, behavior: 'smooth'}); 
 }
 
 function navigateTo(slugOrPath) {
