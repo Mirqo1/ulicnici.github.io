@@ -1,9 +1,8 @@
 let allPosts = [];
-let filteredPosts = []; // Nové pole pre vyhľadávané príspevky
+let filteredPosts = []; 
 let currentPage = 1;
 const postsPerPage = 4;
 
-// Pomocná funkcia: Vytvorí pekný link (slug) z názvu článku
 function createSlug(text) {
     return text.toString().toLowerCase()
         .replace(/\s+/g, '-')           
@@ -14,37 +13,32 @@ function createSlug(text) {
         .replace(/-+$/, '');            
 }
 
-// Načítanie dát
 async function loadBlog() {
     try {
         const response = await fetch('articles.json');
         allPosts = await response.json();
         
-        // Vygenerujeme slug pre každý článok
         allPosts.forEach(post => {
             post.slug = createSlug(post.title);
         });
 
-        router(); // Zistíme, čo máme zobraziť
+        router(); 
     } catch (error) {
         document.getElementById('older-container').innerHTML = '<p style="text-align:center; padding:20px;">Nepodarilo sa načítať články.</p>';
     }
 }
 
-// ROUTER: Zistí aktuálnu URL a podľa toho zapne vyhľadávanie, stranu alebo článok
 function router() {
     const pathSegments = window.location.pathname.split('/').filter(segment => segment !== '');
     const lastSegment = pathSegments[pathSegments.length - 1] || '';
     
-    // Zistíme, či je v URL vyhľadávanie (napr. ?q=beh)
+    // Vyhľadávanie v URL
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q');
 
-    // Aktualizujeme políčko s lupou
     const searchInput = document.getElementById('search-input');
     if (searchInput) searchInput.value = query || '';
 
-    // Aplikujeme filter, ak nejaký je
     if (query) {
         const qLower = query.toLowerCase();
         filteredPosts = allPosts.filter(p => 
@@ -56,7 +50,6 @@ function router() {
         filteredPosts = [...allPosts];
     }
 
-    // Rozhodneme, čo zobraziť
     if (lastSegment === '' || lastSegment === 'index.html' || lastSegment.includes('github.io')) {
         currentPage = 1;
         showGrid();
@@ -67,7 +60,6 @@ function router() {
         showGrid();
         renderBlog();
     } else {
-        // Hľadáme konkrétny článok
         const postIndex = allPosts.findIndex(p => p.slug === lastSegment);
         if (postIndex !== -1) {
             viewPost(postIndex);
@@ -79,51 +71,44 @@ function router() {
     }
 }
 
-// Vykresľovanie zoznamu
 function renderBlog() {
     const featuredContainer = document.getElementById('featured-container');
     const olderContainer = document.getElementById('older-container');
     const pagination = document.querySelector('.pagination');
 
     if (filteredPosts.length === 0) {
-        featuredContainer.style.display = 'block';
-        featuredContainer.innerHTML = '<div style="text-align:center; padding: 60px 20px; background:var(--bg-card); border-radius:14px;"><h2 style="color: var(--text-muted);">Nenašli sa žiadne články pre tento výraz.</h2></div>';
-        olderContainer.innerHTML = '';
+        featuredContainer.style.display = 'none';
+        olderContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 60px 20px; background:var(--bg-card); border-radius:14px;"><h2 style="color: var(--text-muted);">Nenašli sa žiadne články pre tento výraz.</h2></div>';
         pagination.style.display = 'none';
         return;
     }
 
-    // Ak sme na prvej strane a nevyhľadávame, prvý článok ukážeme ako veľký banner
-    let postsToDisplay;
+    // Najnovší (alebo najrelevantnejší vyhľadaný) článok je VŽDY zobrazený ako veľký banner hore
+    const featured = filteredPosts[0];
     const urlParams = new URLSearchParams(window.location.search);
     const isSearching = urlParams.has('q');
+    const badgeText = isSearching ? 'Výsledok vyhľadávania' : 'Najnovší príspevok';
 
-    if (currentPage === 1 && !isSearching) {
-        const featured = filteredPosts[0];
-        featuredContainer.style.display = 'block';
-        featuredContainer.innerHTML = `
-            <div class="featured-post" onclick="navigateTo('${featured.slug}')">
-                <img src="${featured.image}" alt="${featured.title}">
-                <div class="card-overlay">
-                    <div class="post-date">Najnovší príspevok • ${featured.date}</div>
-                    <h2 class="post-title">${featured.title}</h2>
-                </div>
+    featuredContainer.style.display = 'block';
+    featuredContainer.innerHTML = `
+        <div class="featured-post" onclick="navigateTo('${featured.slug}')">
+            <img src="${featured.image}" alt="${featured.title}">
+            <div class="card-overlay">
+                <div class="post-date">${badgeText} • ${featured.date}</div>
+                <h2 class="post-title">${featured.title}</h2>
             </div>
-        `;
-        postsToDisplay = filteredPosts.slice(1);
-    } else {
-        // Na strane 2+ alebo pri vyhľadávaní veľký banner schováme, dáme všetko do mriežky
-        featuredContainer.style.display = 'none';
-        postsToDisplay = filteredPosts;
-    }
+        </div>
+    `;
 
-    // Stránkovanie pre mriežku (Grid)
-    const totalPages = Math.max(1, Math.ceil(postsToDisplay.length / postsPerPage));
+    // Zvyšné články sa stránkujú v mriežke
+    const olderPosts = filteredPosts.slice(1);
+    const totalPages = Math.max(1, Math.ceil(olderPosts.length / postsPerPage));
+    
     if (currentPage > totalPages) currentPage = totalPages;
     
     const startIndex = (currentPage - 1) * postsPerPage;
     const endIndex = startIndex + postsPerPage;
-    const currentGridPosts = postsToDisplay.slice(startIndex, endIndex);
+    const currentGridPosts = olderPosts.slice(startIndex, endIndex);
 
     olderContainer.innerHTML = '';
     currentGridPosts.forEach((post) => {
@@ -148,18 +133,17 @@ function renderBlog() {
     }
 }
 
-// Vyhľadávanie
+// Odošle vyhľadávanie
 function handleSearch(e) {
     e.preventDefault();
     const query = document.getElementById('search-input').value.trim();
     if (query) {
         navigateTo('?q=' + encodeURIComponent(query));
     } else {
-        navigateTo(''); // Ak je prázdne, resetne na domovskú
+        navigateTo(''); 
     }
 }
 
-// Tlačidlá predchádzajúca/ďalšia strana
 function changePage(direction) {
     const newPage = currentPage + direction;
     const urlParams = new URLSearchParams(window.location.search);
@@ -174,13 +158,11 @@ function changePage(direction) {
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-// Zmena URL bez refreshu
 function navigateTo(slugOrPath) {
     const currentPath = window.location.pathname;
     const pathSegments = currentPath.split('/').filter(segment => segment !== '');
     const lastSegment = pathSegments[pathSegments.length - 1] || '';
 
-    // Očistíme cestu od starého článku alebo page-X aby sme sa vrátili na "koreň" (root) repozitára
     const isKnownSegment = lastSegment === 'index.html' || lastSegment.startsWith('page-') || allPosts.some(p => p.slug === lastSegment);
     if (isKnownSegment && !lastSegment.includes('github.io')) {
         pathSegments.pop();
@@ -220,7 +202,6 @@ function showGrid() {
     document.getElementById('ig-btn').innerText = 'Instagram';
 }
 
-/* ZDIEĽANIE */
 function shareFacebook() {
     const url = window.location.href;
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
@@ -249,7 +230,5 @@ function copyLink() {
     });
 }
 
-// Event listener pre tlačidlo Späť/Dopredu v prehliadači
 window.addEventListener('popstate', router);
-
 window.onload = loadBlog;
