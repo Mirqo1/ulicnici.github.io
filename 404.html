@@ -9,15 +9,26 @@
 <body>
 
     <header>
-        <!-- Kliknutie na logo zavolá funkciu na návrat domov (prázdny link) -->
-        <h1 onclick="navigateTo('')">Uličníci <span>Behajú</span></h1>
+        <div class="header-content">
+            <h1 onclick="navigateTo('')">Uličníci <span>Behajú</span></h1>
+            
+            <!-- VYHĽADÁVANIE -->
+            <form class="search-form" onsubmit="handleSearch(event)">
+                <input type="text" id="search-input" placeholder="Hľadať článok...">
+                <button type="submit" title="Vyhľadať">
+                    <!-- SVG Ikona lupy -->
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </form>
+        </div>
     </header>
 
     <main>
-        <!-- Tlačidlo Späť -->
         <button id="back-btn" onclick="navigateTo('')">← Späť na články</button>
 
-        <!-- Domovská stránka (Zoznam) -->
         <div id="blog-layout">
             <div id="featured-container"></div>
             <div id="older-container" class="older-grid"></div>
@@ -33,7 +44,6 @@
             </div>
         </div>
 
-        <!-- Detail článku -->
         <article id="single-post">
             <h1 id="post-full-title"></h1>
             <div id="post-full-meta"></div>
