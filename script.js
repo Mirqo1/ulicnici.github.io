@@ -1,129 +1,106 @@
-let allPosts = [];
-let currentPage = 1;
-const postsPerPage = 4;
-
-// 1. NAČÍTANIE BLOGU Z JSON SÚBORU
-async function loadBlog() {
-    try {
-        const response = await fetch('articles.json');
-        allPosts = await response.json();
-        renderBlog();
-    } catch (error) {
-        const container = document.getElementById('older-container');
-        if (container) {
-            container.innerHTML = '<p>Nepodarilo sa načítať články. Uistite sa, že súbory sú správne nahraté.</p>';
-        }
+// 1. Databáza článkov (tu si budeš pridávať texty a obrázky)
+const articlesData = [
+    {
+        slug: 'vylet-do-tatier', // Toto bude svietiť v linku: www.web.sk/vylet-do-tatier
+        title: 'Náš víkendový výlet do Tatier',
+        date: '15. Jún 2026',
+        excerpt: 'Krásne počasie, náročný výstup a nezabudnuteľné výhľady. Prečítajte si, ako sme zvládli Kriváň.',
+        content: `
+            <p>Tento víkend sme sa rozhodli zdolať jeden z našich najkrajších štítov. Cesta začala skoro ráno...</p>
+            <p>Počasie nám prialo a výhľady boli úžasné. Určite sa sem ešte vrátime.</p>
+        `
+    },
+    {
+        slug: 'ako-zariadit-dodavku',
+        title: 'Ako sme si prerobili dodávku na karavan',
+        date: '2. Máj 2026',
+        excerpt: 'Trvalo to tri mesiace, stálo to veľa nervov, ale výsledok stojí za to.',
+        content: `
+            <p>Všetko to začalo kúpou starej dodávky. V tomto článku vám ukážeme postup krok za krokom, ako sme ju zateplili a vstavali do nej nábytok.</p>
+            <p>Najťažšia bola elektrika, ale nakoniec všetko funguje ako má.</p>
+        `
     }
+];
+
+// 2. Hlavný kontajner, kam budeme vkladať HTML
+const appContainer = document.getElementById('app');
+
+// 3. Funkcia na vykreslenie zoznamu článkov (Domovská stránka)
+function renderHome() {
+    let html = '';
+    articlesData.forEach(article => {
+        html += `
+            <article class="article-card">
+                <h2>${article.title}</h2>
+                <p class="article-date">${article.date}</p>
+                <p>${article.excerpt}</p>
+                <!-- Kliknutie zavolá funkciu navigateTo -->
+                <button class="read-more" onclick="navigateTo('/${article.slug}')">Čítať ďalej</button>
+            </article>
+        `;
+    });
+    appContainer.innerHTML = html;
 }
 
-// 2. VYKRESLENIE HLAVNEJ STRÁNKY (NAJNOVŠÍ + STARŠIE ČLÁNKY)
-function renderBlog() {
-    if (allPosts.length === 0) return;
+// 4. Funkcia na vykreslenie konkrétneho článku
+function renderArticle(slug) {
+    // Nájdeme článok podľa slug-u v URL
+    const article = articlesData.find(a => a.slug === slug);
 
-    // Najnovší (veľký) článok
-    const featured = allPosts[0];
-    const featuredContainer = document.getElementById('featured-container');
-    if (featuredContainer) {
-        featuredContainer.innerHTML = `
-            <div class="featured-post" onclick="viewPost(0)">
-                <img src="${featured.image}" alt="${featured.title}">
-                <div class="card-overlay">
-                    <div class="post-date">Najnovší príspevok • ${featured.date}</div>
-                    <h2 class="post-title">${featured.title}</h2>
+    if (article) {
+        appContainer.innerHTML = `
+            <div class="single-article">
+                <a href="/" class="back-btn" data-link>&larr; Späť na zoznam</a>
+                <h1>${article.title}</h1>
+                <p class="article-date">${article.date}</p>
+                <div class="article-content">
+                    ${article.content}
                 </div>
             </div>
         `;
-    }
-
-    // Staršie články (mriežka so stránkovaním)
-    const olderPosts = allPosts.slice(1);
-    const totalPages = Math.max(1, Math.ceil(olderPosts.length / postsPerPage));
-    
-    if (currentPage > totalPages) currentPage = totalPages;
-    
-    const startIndex = (currentPage - 1) * postsPerPage;
-    const endIndex = startIndex + postsPerPage;
-    const postsToDisplay = olderPosts.slice(startIndex, endIndex);
-
-    const olderContainer = document.getElementById('older-container');
-    if (olderContainer) {
-        olderContainer.innerHTML = '';
-        postsToDisplay.forEach((post, index) => {
-            const realIndex = index + startIndex + 1;
-            olderContainer.innerHTML += `
-                <div class="older-card" onclick="viewPost(${realIndex})">
-                    <img src="${post.image}" alt="${post.title}">
-                    <div class="card-overlay">
-                        <div class="post-date">${post.date}</div>
-                        <h3 class="post-title">${post.title}</h3>
-                    </div>
-                </div>
-            `;
-        });
-    }
-
-    // Aktualizácia stavu stránkovania
-    const pageNumElem = document.getElementById('page-number');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-
-    if (pageNumElem) pageNumElem.innerText = `${currentPage} / ${totalPages}`;
-    if (prevBtn) prevBtn.disabled = currentPage === 1;
-    if (nextBtn) nextBtn.disabled = currentPage === totalPages;
-}
-
-// 3. OVLÁDANIE STRÁNKOVANIA
-function changePage(direction) {
-    currentPage += direction;
-    renderBlog();
-    const olderContainer = document.getElementById('older-container');
-    if (olderContainer) {
-        olderContainer.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        // Ak niekto zadá zlý link
+        appContainer.innerHTML = `
+            <div class="single-article">
+                <h1>Článok sa nenašiel</h1>
+                <p>Ospravedlňujeme sa, ale tento článok neexistuje.</p>
+                <a href="/" class="read-more" data-link>Späť domov</a>
+            </div>
+        `;
     }
 }
 
-// 4. ZOBRAZENIE DETAILU ČLÁNKU
-function viewPost(realIndex) {
-    const post = allPosts[realIndex];
-    
-    const blogLayout = document.getElementById('blog-layout');
-    const singlePost = document.getElementById('single-post');
-    
-    if (blogLayout) blogLayout.style.display = 'none';
-    if (singlePost) singlePost.style.display = 'block';
-    
-    // Zobrazenie všetkých tlačidiel Späť (horné aj spodné)
-    const backButtons = document.querySelectorAll('.back-btn');
-    backButtons.forEach(btn => btn.style.display = 'block');
-    
-    // Naplnenie dátami
-    const titleElem = document.getElementById('post-full-title');
-    const metaElem = document.getElementById('post-full-meta');
-    const bodyElem = document.getElementById('post-full-body');
-    
-    if (titleElem) titleElem.innerText = post.title;
-    if (metaElem) metaElem.innerText = `Publikované: ${post.date} | Autor: ${post.author}`;
-    if (bodyElem) bodyElem.innerHTML = post.content;
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+// 5. Router - Rozhoduje, čo sa má zobraziť podľa aktuálnej URL
+function router() {
+    // Získame cestu z URL (napr. "/vylet-do-tatier" a odstránime prvé lomítko)
+    let path = window.location.pathname.replace(/^\/|\/$/g, '');
+
+    // Ak testuješ lokálne priamo otváraním súboru, path môže byť "index.html"
+    if (path === '' || path === 'index.html') {
+        renderHome();
+    } else {
+        renderArticle(path);
+    }
 }
 
-// 5. NÁVRAT NA ZOZNAM ČLÁNKOV
-function showGrid() {
-    const blogLayout = document.getElementById('blog-layout');
-    const singlePost = document.getElementById('single-post');
-    
-    if (blogLayout) blogLayout.style.display = 'flex';
-    if (singlePost) singlePost.style.display = 'none';
-    
-    // Skrytie tlačidiel Späť
-    const backButtons = document.querySelectorAll('.back-btn');
-    backButtons.forEach(btn => btn.style.display = 'none');
-    
-    // Reset textov na tlačidlách zdieľania
-    const copyBtn = document.getElementById('copy-btn');
-    const igBtn = document.getElementById('ig-btn');
-    
-    if (copyBtn) copyBtn.innerText = 'Skopírovať odkaz';
-    if (igBtn) igBtn.innerText = 'Instagram';
+// 6. Funkcia na zmenu URL adresy bez načítania stránky
+function navigateTo(url) {
+    // Zmení URL v prehliadači
+    window.history.pushState(null, null, url);
+    // Spustí router aby vykreslil správny obsah
+    router();
 }
+
+// 7. Odchytenie kliknutí na odkazy (aby sa stránka nenačítavala znova)
+document.addEventListener('click', e => {
+    if (e.target.matches('[data-link]')) {
+        e.preventDefault();
+        navigateTo(e.target.getAttribute('href'));
+    }
+});
+
+// 8. Podpora pre tlačidlá Späť / Dopredu v prehliadači
+window.addEventListener('popstate', router);
+
+// 9. Prvé spustenie pri načítaní stránky
+router();
