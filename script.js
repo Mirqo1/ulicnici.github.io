@@ -1,106 +1,200 @@
-// 1. Databáza článkov (tu si budeš pridávať texty a obrázky)
-const articlesData = [
-    {
-        slug: 'vylet-do-tatier', // Toto bude svietiť v linku: www.web.sk/vylet-do-tatier
-        title: 'Náš víkendový výlet do Tatier',
-        date: '15. Jún 2026',
-        excerpt: 'Krásne počasie, náročný výstup a nezabudnuteľné výhľady. Prečítajte si, ako sme zvládli Kriváň.',
-        content: `
-            <p>Tento víkend sme sa rozhodli zdolať jeden z našich najkrajších štítov. Cesta začala skoro ráno...</p>
-            <p>Počasie nám prialo a výhľady boli úžasné. Určite sa sem ešte vrátime.</p>
-        `
-    },
-    {
-        slug: 'ako-zariadit-dodavku',
-        title: 'Ako sme si prerobili dodávku na karavan',
-        date: '2. Máj 2026',
-        excerpt: 'Trvalo to tri mesiace, stálo to veľa nervov, ale výsledok stojí za to.',
-        content: `
-            <p>Všetko to začalo kúpou starej dodávky. V tomto článku vám ukážeme postup krok za krokom, ako sme ju zateplili a vstavali do nej nábytok.</p>
-            <p>Najťažšia bola elektrika, ale nakoniec všetko funguje ako má.</p>
-        `
-    }
-];
+let allPosts = [];
+let currentPage = 1;
+const postsPerPage = 4;
 
-// 2. Hlavný kontajner, kam budeme vkladať HTML
-const appContainer = document.getElementById('app');
-
-// 3. Funkcia na vykreslenie zoznamu článkov (Domovská stránka)
-function renderHome() {
-    let html = '';
-    articlesData.forEach(article => {
-        html += `
-            <article class="article-card">
-                <h2>${article.title}</h2>
-                <p class="article-date">${article.date}</p>
-                <p>${article.excerpt}</p>
-                <!-- Kliknutie zavolá funkciu navigateTo -->
-                <button class="read-more" onclick="navigateTo('/${article.slug}')">Čítať ďalej</button>
-            </article>
-        `;
-    });
-    appContainer.innerHTML = html;
+// 1. Pomocná funkcia: Vytvorí pekný link (slug) z názvu článku
+function createSlug(text) {
+    return text.toString().toLowerCase()
+        .replace(/\s+/g, '-')           // Medzery nahradí pomlčkou
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, "") // Odstráni diakritiku (dĺžne, mäkčene)
+        .replace(/[^\w\-]+/g, '')       // Odstráni špeciálne znaky
+        .replace(/\-\-+/g, '-')         // Odstráni viacnásobné pomlčky
+        .replace(/^-+/, '')             // Očistí začiatok
+        .replace(/-+$/, '');            // Očistí koniec
 }
 
-// 4. Funkcia na vykreslenie konkrétneho článku
-function renderArticle(slug) {
-    // Nájdeme článok podľa slug-u v URL
-    const article = articlesData.find(a => a.slug === slug);
+// 2. Načítanie JSON a spustenie routera
+async function loadBlog() {
+    try {
+        const response = await fetch('articles.json');
+        allPosts = await response.json();
+        
+        // Vygenerujeme slug pre každý článok
+        allPosts.forEach(post => {
+            post.slug = createSlug(post.title);
+        });
 
-    if (article) {
-        appContainer.innerHTML = `
-            <div class="single-article">
-                <a href="/" class="back-btn" data-link>&larr; Späť na zoznam</a>
-                <h1>${article.title}</h1>
-                <p class="article-date">${article.date}</p>
-                <div class="article-content">
-                    ${article.content}
-                </div>
-            </div>
-        `;
-    } else {
-        // Ak niekto zadá zlý link
-        appContainer.innerHTML = `
-            <div class="single-article">
-                <h1>Článok sa nenašiel</h1>
-                <p>Ospravedlňujeme sa, ale tento článok neexistuje.</p>
-                <a href="/" class="read-more" data-link>Späť domov</a>
-            </div>
-        `;
+        // Hneď ako máme dáta, zistíme, čo máme zobraziť (podľa URL)
+        router();
+    } catch (error) {
+        document.getElementById('older-container').innerHTML = '<p>Nepodarilo sa načítať články. Uistite sa, že súbory sú prítomné.</p>';
     }
 }
 
-// 5. Router - Rozhoduje, čo sa má zobraziť podľa aktuálnej URL
+// 3. Router - zisťuje, aká je URL a podľa toho zapína článok alebo zoznam
 function router() {
-    // Získame cestu z URL (napr. "/vylet-do-tatier" a odstránime prvé lomítko)
-    let path = window.location.pathname.replace(/^\/|\/$/g, '');
+    // Zistíme poslednú časť URL adresy
+    const pathSegments = window.location.pathname.split('/').filter(segment => segment !== '');
+    const lastSegment = pathSegments[pathSegments.length - 1];
 
-    // Ak testuješ lokálne priamo otváraním súboru, path môže byť "index.html"
-    if (path === '' || path === 'index.html') {
-        renderHome();
+    // Ak je URL prázdna, alebo je tam len index.html (sme na domovskej stránke)
+    if (!lastSegment || lastSegment === 'index.html' || lastSegment.includes('github.io')) {
+        showGrid();
+        renderBlog();
     } else {
-        renderArticle(path);
+        // Hľadáme článok, ktorý má rovnaký slug ako je v URL
+        const postIndex = allPosts.findIndex(p => p.slug === lastSegment);
+        if (postIndex !== -1) {
+            viewPost(postIndex, false); // false znamená, že už nemusíme meniť URL, lebo tam už je
+        } else {
+            // Ak link neexistuje, hodíme ho na domovskú stránku
+            showGrid();
+            renderBlog();
+        }
     }
 }
 
-// 6. Funkcia na zmenu URL adresy bez načítania stránky
-function navigateTo(url) {
-    // Zmení URL v prehliadači
-    window.history.pushState(null, null, url);
-    // Spustí router aby vykreslil správny obsah
+// 4. Funkcia pre zmenu URL bez refreshu stránky
+function navigateTo(slug) {
+    // Vytvoríme novú URL na základe cesty, kde sa aktuálne nachádzame
+    const currentPath = window.location.pathname;
+    let basePath = currentPath;
+    
+    // Očistíme cestu od starého článku, ak nejaký v URL bol
+    if (slug === '') {
+        // Návrat na domovskú (odstránime posledný segment URL)
+        const pathSegments = currentPath.split('/').filter(segment => segment !== '');
+        if (pathSegments.length > 0 && allPosts.some(p => p.slug === pathSegments[pathSegments.length - 1])) {
+            pathSegments.pop();
+            basePath = '/' + pathSegments.join('/');
+            if(basePath !== '/') basePath += '/';
+        }
+    } else {
+        // Ideme na článok
+        if(!basePath.endsWith('/')) basePath += '/';
+    }
+
+    const newUrl = slug === '' ? basePath : basePath + slug;
+    
+    window.history.pushState({}, '', newUrl);
     router();
 }
 
-// 7. Odchytenie kliknutí na odkazy (aby sa stránka nenačítavala znova)
-document.addEventListener('click', e => {
-    if (e.target.matches('[data-link]')) {
-        e.preventDefault();
-        navigateTo(e.target.getAttribute('href'));
-    }
-});
-
-// 8. Podpora pre tlačidlá Späť / Dopredu v prehliadači
+// Ochrana - ak používateľ klikne na tlačidlo "Späť" vo svojom prehliadači
 window.addEventListener('popstate', router);
 
-// 9. Prvé spustenie pri načítaní stránky
-router();
+
+// -- PÔVODNÉ FUNKCIE (Upravené len volania onClick) --
+
+function renderBlog() {
+    if (allPosts.length === 0) return;
+
+    const featured = allPosts[0];
+    const featuredContainer = document.getElementById('featured-container');
+    // ZMENA: namiesto viewPost(0) používame navigateTo()
+    featuredContainer.innerHTML = `
+        <div class="featured-post" onclick="navigateTo('${featured.slug}')">
+            <img src="${featured.image}" alt="${featured.title}">
+            <div class="card-overlay">
+                <div class="post-date">Najnovší príspevok • ${featured.date}</div>
+                <h2 class="post-title">${featured.title}</h2>
+            </div>
+        </div>
+    `;
+
+    const olderPosts = allPosts.slice(1);
+    const totalPages = Math.max(1, Math.ceil(olderPosts.length / postsPerPage));
+    
+    if (currentPage > totalPages) currentPage = totalPages;
+    
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+    const postsToDisplay = olderPosts.slice(startIndex, endIndex);
+
+    const olderContainer = document.getElementById('older-container');
+    olderContainer.innerHTML = '';
+
+    postsToDisplay.forEach((post, index) => {
+        const realIndex = index + startIndex + 1;
+        // ZMENA: namiesto viewPost() používame navigateTo()
+        olderContainer.innerHTML += `
+            <div class="older-card" onclick="navigateTo('${post.slug}')">
+                <img src="${post.image}" alt="${post.title}">
+                <div class="card-overlay">
+                    <div class="post-date">${post.date}</div>
+                    <h3 class="post-title">${post.title}</h3>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('page-number').innerText = `${currentPage} / ${totalPages}`;
+    document.getElementById('prev-btn').disabled = currentPage === 1;
+    document.getElementById('next-btn').disabled = currentPage === totalPages;
+}
+
+function changePage(direction) {
+    currentPage += direction;
+    renderBlog();
+    document.getElementById('older-container').scrollIntoView({ behavior: 'smooth' });
+}
+
+function viewPost(realIndex, pushToHistory = true) {
+    const post = allPosts[realIndex];
+    document.getElementById('blog-layout').style.display = 'none';
+    document.getElementById('back-btn').style.display = 'block';
+    
+    const singlePost = document.getElementById('single-post');
+    singlePost.style.display = 'block';
+    
+    document.getElementById('post-full-title').innerText = post.title;
+    document.getElementById('post-full-meta').innerText = `Publikované: ${post.date} | Autor: ${post.author}`;
+    document.getElementById('post-full-body').innerHTML = post.content;
+    
+    window.scrollTo({top: 0, behavior: 'smooth'});
+
+    // Dynamicky upravíme meta title stránky
+    document.title = `${post.title} | Uličníci`;
+}
+
+function showGrid() {
+    document.title = "Uličníci Behajú | Bežecký Blog";
+    document.getElementById('single-post').style.display = 'none';
+    document.getElementById('back-btn').style.display = 'none';
+    document.getElementById('blog-layout').style.display = 'flex';
+    document.getElementById('copy-btn').innerText = 'Skopírovať odkaz';
+    document.getElementById('ig-btn').innerText = 'Instagram';
+}
+
+/* FUNKCIE PRE ZDIEĽANIE */
+function shareFacebook() {
+    const url = window.location.href;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+}
+
+function shareX() {
+    const url = window.location.href;
+    const text = document.getElementById('post-full-title').innerText;
+    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function shareInstagram() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        const igBtn = document.getElementById('ig-btn');
+        igBtn.innerText = '✓ Odkaz skopírovaný!';
+        setTimeout(() => { window.open('https://www.instagram.com/', '_blank'); }, 1000);
+    }).catch(() => { window.open('https://www.instagram.com/', '_blank'); });
+}
+
+function copyLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        document.getElementById('copy-btn').innerText = '✓ Skopírované!';
+    }).catch(() => {
+        alert('Nepodarilo sa skopírovať odkaz automaticky.');
+    });
+}
+
+// Spustenie po načítaní
+window.onload = loadBlog;
