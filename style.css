@@ -14,21 +14,21 @@ body { background-color: var(--bg-light); color: var(--text-main); line-height: 
 header { background-color: var(--bg-card); border-bottom: 1px solid #e5e7eb; padding: 20px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
 .header-container {
-    max-width: 1200px;
+    max-width: 1240px; /* Trochu širšie kvôli paddingu, aby lícovalo s main */
     margin: 0 auto;
     padding: 0 20px;
-    position: relative;
     display: flex;
-    justify-content: center; /* Drží nadpis v strede */
+    justify-content: space-between;
     align-items: center;
 }
 
-header h1 { font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; color: var(--text-main); font-weight: 800; margin: 0; }
+/* Spacer slúži ako protiváha pre search-form, aby h1 bolo presne v strede */
+.header-spacer { width: 250px; }
+
+header h1 { flex: 1; text-align: center; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; color: var(--text-main); font-weight: 800; margin: 0; }
 header h1 span { color: var(--accent-sport); }
 
 .search-form {
-    position: absolute;
-    right: 20px; /* Zarovná lupu s pravým okrajom článkov */
     display: flex;
     align-items: center;
     background: var(--bg-light);
@@ -116,8 +116,9 @@ footer { background-color: var(--bg-card); text-align: center; padding: 25px; co
     #post-full-title { font-size: 2rem; }
 }
 @media (max-width: 768px) {
-    .header-container { flex-direction: column; justify-content: center; text-align: center; }
-    .search-form { position: relative; right: auto; margin-top: 15px; width: 100%; max-width: 300px; }
+    .header-container { flex-direction: column; gap: 15px; }
+    .header-spacer { display: none; }
+    .search-form { width: 100%; max-width: 400px; }
 }
 @media (max-width: 600px) {
     .older-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
