@@ -3,25 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uličníci</title>
+    <title>Uličníci Behajú | Bežecký Blog</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
-        <div class="container header-container">
-            <!-- Logo funguje ako odkaz domov -->
-            <a href="/" class="logo" data-link>Uličníci</a>
-        </div>
+        <!-- Kliknutie na logo zavolá funkciu na návrat domov (prázdny link) -->
+        <h1 onclick="navigateTo('')">Uličníci <span>Behajú</span></h1>
     </header>
 
-    <!-- Tu sa bude nahrávať obsah (zoznam článkov alebo konkrétny článok) -->
-    <main id="app" class="container"></main>
+    <main>
+        <!-- Tlačidlo Späť -->
+        <button id="back-btn" onclick="navigateTo('')">← Späť na články</button>
+
+        <!-- Domovská stránka (Zoznam) -->
+        <div id="blog-layout">
+            <div id="featured-container"></div>
+            <div id="older-container" class="older-grid"></div>
+
+            <div class="pagination">
+                <button id="prev-btn" class="page-btn" onclick="changePage(-1)">
+                    <span class="arrow left"></span>
+                </button>
+                <span id="page-number">1 / 1</span>
+                <button id="next-btn" class="page-btn" onclick="changePage(1)">
+                    <span class="arrow right"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Detail článku -->
+        <article id="single-post">
+            <h1 id="post-full-title"></h1>
+            <div id="post-full-meta"></div>
+            <div id="post-full-body"></div>
+            
+            <div class="share-section">
+                <div class="share-title">Zdieľať článok</div>
+                <div class="share-buttons">
+                    <button class="share-btn share-fb" onclick="shareFacebook()">Facebook</button>
+                    <button class="share-btn share-x" onclick="shareX()">X / Twitter</button>
+                    <button class="share-btn share-ig" id="ig-btn" onclick="shareInstagram()">Instagram</button>
+                    <button class="share-btn" id="copy-btn" onclick="copyLink()">Skopírovať odkaz</button>
+                </div>
+            </div>
+        </article>
+    </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2026 Uličníci. Všetky práva vyhradené.</p>
-        </div>
+        &copy; 2026 Uličníci Behajú. Všetky práva vyhradené.
     </footer>
 
     <script src="script.js"></script>
