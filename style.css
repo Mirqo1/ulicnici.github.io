@@ -104,7 +104,12 @@ main { max-width: 1200px; margin: 30px auto; padding: 0 20px; flex: 1; width: 10
 .share-x { background: #000000; color: white; border: none; }
 .share-x:hover { background: #262626; }
 .share-ig { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; border: none; }
-.share-ig:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(220, 39, 67, 0.3); }
+.share-ig:hover { 
+    /* Vynútime ponechanie gradientu, aby nezosivelo */
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
+    /* Jemne ho stmavíme, rovnako ako FB a X */
+    filter: brightness(0.9); 
+}
 
 /* Pätička */
 footer { background-color: var(--bg-card); text-align: center; padding: 25px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid #e5e7eb; margin-top: auto; }
