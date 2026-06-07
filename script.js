@@ -32,7 +32,6 @@ function router() {
     const pathSegments = window.location.pathname.split('/').filter(segment => segment !== '');
     const lastSegment = pathSegments[pathSegments.length - 1] || '';
     
-    // Vyhľadávanie v URL
     const urlParams = new URLSearchParams(window.location.search);
     const query = urlParams.get('q');
 
@@ -77,7 +76,20 @@ function renderBlog() {
     const pagination = document.querySelector('.pagination');
 
     if (filteredPosts.length === 0) {
-featuredContainer.style.display = 'block';
+        featuredContainer.style.display = 'none';
+        olderContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 60px 20px; background:var(--bg-card); border-radius:14px;"><h2 style="color: var(--text-muted);">Nenašli sa žiadne články pre tento výraz.</h2></div>';
+        pagination.style.display = 'none';
+        return;
+    }
+
+    // Najnovší (alebo najrelevantnejší vyhľadaný) článok sa VŽDY zobrazí v bannery + REKLAMA POD NÍM
+    const featured = filteredPosts[0];
+    const urlParams = new URLSearchParams(window.location.search);
+    const isSearching = urlParams.has('q');
+    const badgeText = isSearching ? 'Výsledok vyhľadávania' : 'Najnovší príspevok';
+
+    featuredContainer.style.display = 'block';
+    // Tu je správne umiestnený článok a pod ním banner pre reklamu
     featuredContainer.innerHTML = `
         <div class="featured-post" onclick="navigateTo('${featured.slug}')">
             <img src="${featured.image}" alt="${featured.title}">
@@ -92,24 +104,6 @@ featuredContainer.style.display = 'block';
             <div style="text-align: center;">
                 <span style="display:block; font-size: 1.1rem; color: #6b7280; margin-bottom: 4px;">Tu bude Google reklama</span>
                 <span style="font-size: 0.85rem;">(Horizontálny responzívny banner)</span>
-            </div>
-        </div>
-    `;
-    }
-
-    // Najnovší (alebo najrelevantnejší vyhľadaný) článok sa VŽDY zobrazí v bannery
-    const featured = filteredPosts[0];
-    const urlParams = new URLSearchParams(window.location.search);
-    const isSearching = urlParams.has('q');
-    const badgeText = isSearching ? 'Výsledok vyhľadávania' : 'Najnovší príspevok';
-
-    featuredContainer.style.display = 'block';
-    featuredContainer.innerHTML = `
-        <div class="featured-post" onclick="navigateTo('${featured.slug}')">
-            <img src="${featured.image}" alt="${featured.title}">
-            <div class="card-overlay">
-                <div class="post-date">${badgeText} • ${featured.date}</div>
-                <h2 class="post-title">${featured.title}</h2>
             </div>
         </div>
     `;
@@ -168,7 +162,6 @@ function changePage(direction) {
     }
     
     navigateTo(newPath);
-    // Presunie užívateľa naspäť navrch (k veľkému banneru), keď prejde na ďalšiu stranu
     window.scrollTo({top: 0, behavior: 'smooth'}); 
 }
 
@@ -201,7 +194,9 @@ function viewPost(realIndex) {
     
     document.getElementById('post-full-title').innerText = post.title;
     document.getElementById('post-full-meta').innerText = `Publikované: ${post.date} | Autor: ${post.author}`;
-document.getElementById('post-full-body').innerHTML = post.content + `
+    
+    // Tu je správne vložený obsah článku a pod ním druhý reklamný banner
+    document.getElementById('post-full-body').innerHTML = post.content + `
         <!-- MIESTO PRE GOOGLE REKLAMU (PLACEHOLDER) -->
         <div style="margin: 40px auto 0 auto; width: 100%; max-width: 700px; height: 250px; background-color: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 500;">
             <div style="text-align: center;">
