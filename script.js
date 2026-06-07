@@ -13,6 +13,10 @@ function createSlug(text) {
         .replace(/-+$/, '');            
 }
 
+function removeDiacritics(text) {
+    return text.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+}
+
 async function loadBlog() {
     try {
         const response = await fetch('articles.json');
@@ -38,13 +42,20 @@ function router() {
     const searchInput = document.getElementById('search-input');
     if (searchInput) searchInput.value = query || '';
 
-    if (query) {
-        const qLower = query.toLowerCase();
-        filteredPosts = allPosts.filter(p => 
-            p.title.toLowerCase().includes(qLower) || 
-            p.content.toLowerCase().includes(qLower) ||
-            p.author.toLowerCase().includes(qLower)
-        );
+if (query) {
+        // Hľadaný výraz zmeníme na malé písmená a odstránime diakritiku
+        const qClean = removeDiacritics(query.toLowerCase());
+
+        filteredPosts = allPosts.filter(p => {
+            // Texty článkov tiež zmeníme na malé písmená a očistíme od diakritiky
+            const titleClean = removeDiacritics(p.title.toLowerCase());
+            const contentClean = removeDiacritics(p.content.toLowerCase());
+            const authorClean = removeDiacritics(p.author.toLowerCase());
+
+            return titleClean.includes(qClean) || 
+                   contentClean.includes(qClean) ||
+                   authorClean.includes(qClean);
+        });
     } else {
         filteredPosts = [...allPosts];
     }
