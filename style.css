@@ -14,11 +14,12 @@ body { background-color: var(--bg-light); color: var(--text-main); line-height: 
 header { background-color: var(--bg-card); border-bottom: 1px solid #e5e7eb; padding: 20px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
 
 .header-container {
-    max-width: 1240px; /* Trochu širšie kvôli paddingu, aby lícovalo s main */
+    max-width: 1200px; /* <--- Toto je opravené z 1240px */
     margin: 0 auto;
     padding: 0 20px;
+    position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; 
     align-items: center;
 }
 
