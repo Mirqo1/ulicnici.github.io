@@ -77,10 +77,24 @@ function renderBlog() {
     const pagination = document.querySelector('.pagination');
 
     if (filteredPosts.length === 0) {
-        featuredContainer.style.display = 'none';
-        olderContainer.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 60px 20px; background:var(--bg-card); border-radius:14px;"><h2 style="color: var(--text-muted);">Nenašli sa žiadne články pre tento výraz.</h2></div>';
-        pagination.style.display = 'none';
-        return;
+featuredContainer.style.display = 'block';
+    featuredContainer.innerHTML = `
+        <div class="featured-post" onclick="navigateTo('${featured.slug}')">
+            <img src="${featured.image}" alt="${featured.title}">
+            <div class="card-overlay">
+                <div class="post-date">${badgeText} • ${featured.date}</div>
+                <h2 class="post-title">${featured.title}</h2>
+            </div>
+        </div>
+
+        <!-- MIESTO PRE GOOGLE REKLAMU (PLACEHOLDER) -->
+        <div style="margin: 40px auto; max-width: 100%; height: 120px; background-color: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 500;">
+            <div style="text-align: center;">
+                <span style="display:block; font-size: 1.1rem; color: #6b7280; margin-bottom: 4px;">Tu bude Google reklama</span>
+                <span style="font-size: 0.85rem;">(Horizontálny responzívny banner)</span>
+            </div>
+        </div>
+    `;
     }
 
     // Najnovší (alebo najrelevantnejší vyhľadaný) článok sa VŽDY zobrazí v bannery
@@ -187,7 +201,15 @@ function viewPost(realIndex) {
     
     document.getElementById('post-full-title').innerText = post.title;
     document.getElementById('post-full-meta').innerText = `Publikované: ${post.date} | Autor: ${post.author}`;
-    document.getElementById('post-full-body').innerHTML = post.content;
+document.getElementById('post-full-body').innerHTML = post.content + `
+        <!-- MIESTO PRE GOOGLE REKLAMU (PLACEHOLDER) -->
+        <div style="margin: 40px auto 0 auto; width: 100%; max-width: 700px; height: 250px; background-color: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 500;">
+            <div style="text-align: center;">
+                <span style="display:block; font-size: 1.1rem; color: #6b7280; margin-bottom: 4px;">Tu bude Google reklama</span>
+                <span style="font-size: 0.85rem;">(In-article banner)</span>
+            </div>
+        </div>
+    `;
     
     window.scrollTo({top: 0, behavior: 'smooth'});
     document.title = `${post.title} | Uličníci Behajú`;
