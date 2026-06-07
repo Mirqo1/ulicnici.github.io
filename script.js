@@ -90,7 +90,7 @@ function renderBlog() {
 
     featuredContainer.style.display = 'block';
     // Tu je správne umiestnený článok a pod ním banner pre reklamu
-    featuredContainer.innerHTML = `
+featuredContainer.innerHTML = `
         <div class="featured-post" onclick="navigateTo('${featured.slug}')">
             <img src="${featured.image}" alt="${featured.title}">
             <div class="card-overlay">
@@ -100,7 +100,7 @@ function renderBlog() {
         </div>
 
         <!-- MIESTO PRE GOOGLE REKLAMU (PLACEHOLDER) -->
-        <div style="margin: 40px auto; max-width: 100%; height: 120px; background-color: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 500;">
+        <div style="margin: 30px auto 0 auto; max-width: 100%; height: 120px; background-color: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 500;">
             <div style="text-align: center;">
                 <span style="display:block; font-size: 1.1rem; color: #6b7280; margin-bottom: 4px;">Tu bude Google reklama</span>
                 <span style="font-size: 0.85rem;">(Horizontálny responzívny banner)</span>
