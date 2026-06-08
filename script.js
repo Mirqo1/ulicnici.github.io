@@ -208,7 +208,7 @@ function viewPost(realIndex) {
     singlePost.style.display = 'block';
     
     document.getElementById('post-full-title').innerText = post.title;
-    document.getElementById('post-full-meta').innerText = `Publikované: ${post.date} | Autor: ${post.author}`;
+    document.getElementById('post-full-meta').innerHTML = `Publikované: ${post.date} &nbsp;|&nbsp; Autor: ${post.author} &nbsp;|&nbsp; ⏱️ Čítanie na ${readingTime} min.`;
     
     // Tu je správne vložený obsah článku a pod ním druhý reklamný banner
     document.getElementById('post-full-body').innerHTML = post.content + `
