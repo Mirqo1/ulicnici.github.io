@@ -23,8 +23,8 @@
             <div class="header-spacer"></div> 
             
             <!-- SEO oprava: Odkaz domov je teraz cez <a> tag, nie len cez onClick na h1 -->
-            <a href="/" data-link style="text-decoration: none; flex: 1; text-align: center;">
-                <h1>Uličníci <span>Behajú</span></h1>
+            <a href="#" onclick="event.preventDefault(); navigateTo('');" style="text-decoration: none; flex: 1; text-align: center;">
+            <h1>Uličníci <span>Behajú</span></h1>
             </a>
             
             <form class="search-form" onsubmit="handleSearch(event)">
