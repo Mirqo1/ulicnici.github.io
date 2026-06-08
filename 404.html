@@ -4,27 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uličníci Behajú | Bežecký Blog</title>
-    <link rel="stylesheet" href="style.css">
+    
+    <!-- SEO a Zdieľanie (Facebook/Twitter) -->
+    <meta name="description" content="Náš bežecký blog o pretekoch, výbave, tréningu a bežeckých trasách v našom okolí. Pridajte sa k Uličníkom!">
     <meta property="og:title" content="Uličníci Behajú | Bežecký Blog">
-    <meta property="og:description" content="Náš bežecký blog o pretekoch, výbave a tratiach v našom okolí.">
-    <meta property="og:image" content="https://tvojweb.sk/cesta-k-nejakemu-peknemu-uvodnemu-obrazku.jpg">
-    <meta property="og:url" content="https://tvojweb.sk">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:description" content="Náš bežecký blog o pretekoch, výbave, tréningu a bežeckých trasách v našom okolí.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mirqo1.github.io/ulicnici.github.io/">
+    <!-- Ak nemáš faviconu (ikonku hore v lište), tento riadok ju pripraví na neskôr -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo="> 
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <header>
         <div class="header-container">
-            <!-- Prazdny blok pre dokonalé vycentrovanie -->
             <div class="header-spacer"></div> 
             
-            <!-- Vycentrovaný nadpis -->
-            <h1 onclick="navigateTo('')">Uličníci <span>Behajú</span></h1>
+            <!-- SEO oprava: Odkaz domov je teraz cez <a> tag, nie len cez onClick na h1 -->
+            <a href="/" data-link style="text-decoration: none; flex: 1; text-align: center;">
+                <h1>Uličníci <span>Behajú</span></h1>
+            </a>
             
-            <!-- Vyhľadávací formulár zarovnaný vpravo -->
             <form class="search-form" onsubmit="handleSearch(event)">
+                <label for="search-input" style="display:none;">Hľadať článok</label>
                 <input type="text" id="search-input" placeholder="Hľadať článok...">
-                <button type="submit" title="Vyhľadať">
+                <button type="submit" title="Vyhľadať" aria-label="Vyhľadať">
                     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -41,19 +47,19 @@
             <div id="featured-container"></div>
             <div id="older-container" class="older-grid"></div>
 
-            <div class="pagination">
-                <button id="prev-btn" class="page-btn" onclick="changePage(-1)">
+            <nav class="pagination" aria-label="Stránkovanie">
+                <button id="prev-btn" class="page-btn" aria-label="Predchádzajúca strana" onclick="changePage(-1)">
                     <span class="arrow left"></span>
                 </button>
                 <span id="page-number">1 / 1</span>
-                <button id="next-btn" class="page-btn" onclick="changePage(1)">
+                <button id="next-btn" class="page-btn" aria-label="Ďalšia strana" onclick="changePage(1)">
                     <span class="arrow right"></span>
                 </button>
-            </div>
+            </nav>
         </div>
 
         <article id="single-post">
-            <h1 id="post-full-title"></h1>
+            <h2 id="post-full-title"></h2> <!-- Zmenené z H1 na H2, lebo H1 má byť na stránke len raz (názov blogu) -->
             <div id="post-full-meta"></div>
             <div id="post-full-body"></div>
             
