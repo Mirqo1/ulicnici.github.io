@@ -197,6 +197,10 @@ function navigateTo(slugOrPath) {
 
 function viewPost(realIndex) {
     const post = allPosts[realIndex];
+    // Odstráni HTML značky z textu a spočíta slová
+    const textOnly = post.content.replace(/<[^>]*>?/gm, '');
+    const wordCount = textOnly.split(/\s+/).length;
+    const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 slov za minútu
     document.getElementById('blog-layout').style.display = 'none';
     document.getElementById('back-btn').style.display = 'inline-block';
     
