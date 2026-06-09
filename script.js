@@ -13,17 +13,15 @@ function createSlug(text) {
         .replace(/-+$/, '');            
 }
 
-function removeDiacritics(text) {
-    return text.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-}
-
 async function loadBlog() {
     try {
         const response = await fetch('articles.json');
         allPosts = await response.json();
         
         allPosts.forEach(post => {
-            post.slug = createSlug(post.title);
+            // Generujeme slug z title_short (ak existuje), inak z title
+            const nameForSlug = post.title_short ? post.title_short : post.title;
+            post.slug = createSlug(nameForSlug);
         });
 
         router(); 
@@ -42,17 +40,20 @@ function router() {
     const searchInput = document.getElementById('search-input');
     if (searchInput) searchInput.value = query || '';
 
-if (query) {
-        // Hľadaný výraz zmeníme na malé písmená a odstránime diakritiku
+    if (query) {
+        // Funkcia na odstránenie diakritiky
+        const removeDiacritics = (text) => text.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
         const qClean = removeDiacritics(query.toLowerCase());
 
         filteredPosts = allPosts.filter(p => {
-            // Texty článkov tiež zmeníme na malé písmená a očistíme od diakritiky
             const titleClean = removeDiacritics(p.title.toLowerCase());
+            // Prehľadávame aj short title, ak existuje
+            const titleShortClean = p.title_short ? removeDiacritics(p.title_short.toLowerCase()) : "";
             const contentClean = removeDiacritics(p.content.toLowerCase());
             const authorClean = removeDiacritics(p.author.toLowerCase());
 
             return titleClean.includes(qClean) || 
+                   titleShortClean.includes(qClean) ||
                    contentClean.includes(qClean) ||
                    authorClean.includes(qClean);
         });
@@ -93,23 +94,23 @@ function renderBlog() {
         return;
     }
 
-    // Najnovší (alebo najrelevantnejší vyhľadaný) článok sa VŽDY zobrazí v bannery + REKLAMA POD NÍM
     const featured = filteredPosts[0];
     const urlParams = new URLSearchParams(window.location.search);
     const isSearching = urlParams.has('q');
     const badgeText = isSearching ? 'Výsledok vyhľadávania' : 'Najnovší príspevok';
 
+    // Tu použijeme title_short, ak existuje, inak klasický title
+    const displayTitleFeatured = featured.title_short ? featured.title_short : featured.title;
+
     featuredContainer.style.display = 'block';
-    // Tu je správne umiestnený článok a pod ním banner pre reklamu
-featuredContainer.innerHTML = `
+    featuredContainer.innerHTML = `
         <div class="featured-post" onclick="navigateTo('${featured.slug}')">
-            <img src="${featured.image}" alt="${featured.title}">
+            <img src="${featured.image}" alt="${displayTitleFeatured}">
             <div class="card-overlay">
                 <div class="post-date">${badgeText} • ${featured.date}</div>
-                <h2 class="post-title">${featured.title}</h2>
+                <h2 class="post-title">${displayTitleFeatured}</h2>
             </div>
         </div>
-
         <!-- MIESTO PRE GOOGLE REKLAMU (PLACEHOLDER) -->
         <div style="margin: 30px auto 0 auto; max-width: 100%; height: 120px; background-color: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 500;">
             <div style="text-align: center;">
@@ -119,7 +120,6 @@ featuredContainer.innerHTML = `
         </div>
     `;
 
-    // Zvyšné články sa stránkujú v mriežke
     const olderPosts = filteredPosts.slice(1);
     const totalPages = Math.max(1, Math.ceil(olderPosts.length / postsPerPage));
     
@@ -131,12 +131,14 @@ featuredContainer.innerHTML = `
 
     olderContainer.innerHTML = '';
     currentGridPosts.forEach((post) => {
+        // Tu opäť použijeme title_short, ak existuje
+        const displayTitle = post.title_short ? post.title_short : post.title;
         olderContainer.innerHTML += `
             <div class="older-card" onclick="navigateTo('${post.slug}')">
-                <img src="${post.image}" alt="${post.title}">
+                <img src="${post.image}" alt="${displayTitle}">
                 <div class="card-overlay">
                     <div class="post-date">${post.date}</div>
-                    <h3 class="post-title">${post.title}</h3>
+                    <h3 class="post-title">${displayTitle}</h3>
                 </div>
             </div>
         `;
@@ -197,20 +199,20 @@ function navigateTo(slugOrPath) {
 
 function viewPost(realIndex) {
     const post = allPosts[realIndex];
-    // Odstráni HTML značky z textu a spočíta slová
-    const textOnly = post.content.replace(/<[^>]*>?/gm, '');
-    const wordCount = textOnly.split(/\s+/).length;
-    const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // 200 slov za minútu
     document.getElementById('blog-layout').style.display = 'none';
     document.getElementById('back-btn').style.display = 'inline-block';
     
     const singlePost = document.getElementById('single-post');
     singlePost.style.display = 'block';
     
+    const textOnly = post.content.replace(/<[^>]*>?/gm, '');
+    const wordCount = textOnly.split(/\s+/).length;
+    const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+    // V detaile článku sa použije vždy plný, dlhý názov "title"
     document.getElementById('post-full-title').innerText = post.title;
     document.getElementById('post-full-meta').innerHTML = `Publikované: ${post.date} &nbsp;|&nbsp; Autor: ${post.author} &nbsp;|&nbsp; ⏱️ Čítanie na ${readingTime} min.`;
     
-    // Tu je správne vložený obsah článku a pod ním druhý reklamný banner
     document.getElementById('post-full-body').innerHTML = post.content + `
         <!-- MIESTO PRE GOOGLE REKLAMU (PLACEHOLDER) -->
         <div style="margin: 40px auto 0 auto; width: 100%; max-width: 700px; height: 250px; background-color: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-weight: 500;">
