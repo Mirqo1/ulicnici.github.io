@@ -137,3 +137,31 @@ footer { background-color: var(--bg-card); text-align: center; padding: 25px; co
     .single-img-container img { width: 100%; }
     .double-img-container { flex-direction: column; }
 }
+
+/* TLAČIDLÁ PRE EXTERNÉ ODKAZY V ČLÁNKOCH */
+.btn-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+}
+
+.article-btn {
+    display: inline-block;
+    padding: 14px 30px;
+    background-color: var(--accent-sport);
+    color: #ffffff !important;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(181, 166, 0, 0.3);
+}
+
+.article-btn:hover {
+    transform: translateY(-2px);
+    background-color: #998c00;
+    box-shadow: 0 6px 15px rgba(181, 166, 0, 0.4);
+}
