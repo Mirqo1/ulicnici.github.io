@@ -266,3 +266,31 @@ function copyLink() {
 
 window.addEventListener('popstate', router);
 window.onload = loadBlog;
+
+/* --- LIGHTBOX FUNKCIE --- */
+
+// Odchytávanie kliknutí na akýkoľvek obrázok vnútri článku
+document.getElementById('post-full-body').addEventListener('click', function(e) {
+    if(e.target.tagName === 'IMG') {
+        openLightbox(e.target.src);
+    }
+});
+
+function openLightbox(src) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    lightboxImg.src = src; // Vloží zdroj obrázka, na ktorý sa kliklo
+    lightbox.classList.add('show');
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.remove('show');
+}
+
+// Zatvorenie lightboxu klávesou ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape") {
+        closeLightbox();
+    }
+});
