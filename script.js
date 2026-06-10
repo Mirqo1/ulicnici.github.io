@@ -269,9 +269,9 @@ window.onload = loadBlog;
 
 /* --- LIGHTBOX FUNKCIE --- */
 
-// Odchytávanie kliknutí na akýkoľvek obrázok vnútri článku
+// Odchytávanie kliknutí IBA na obrázky s triedou lightbox-enabled
 document.getElementById('post-full-body').addEventListener('click', function(e) {
-    if(e.target.tagName === 'IMG') {
+    if(e.target.tagName === 'IMG' && e.target.classList.contains('lightbox-enabled')) {
         openLightbox(e.target.src);
     }
 });
