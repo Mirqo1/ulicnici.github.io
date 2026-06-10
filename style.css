@@ -176,3 +176,62 @@ footer { background-color: var(--bg-card); text-align: center; padding: 25px; co
     background-color: #998c00;
     box-shadow: 0 6px 15px rgba(181, 166, 0, 0.4);
 }
+
+/* --- LIGHTBOX (Zväčšovanie obrázkov) --- */
+
+/* Zmení kurzor na lupu nad všetkými obrázkami v článku */
+#post-full-body img {
+    cursor: zoom-in;
+}
+
+.lightbox {
+    display: none; /* Štandardne skryté */
+    position: fixed; 
+    z-index: 9999; /* Musí byť úplne navrchu */
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.9); /* Čierne polopriehľadné pozadie */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Trieda, ktorá lightbox zapne */
+.lightbox.show {
+    display: flex;
+    opacity: 1;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.lightbox-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90vh; /* Aby sa zmestil na výšku obrazovky */
+    border-radius: 4px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.5);
+    animation: zoomIn 0.3s ease; /* Animácia priblíženia */
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.lightbox-close:hover {
+    color: var(--accent-sport);
+}
+
+@keyframes zoomIn {
+    from {transform: scale(0.9)} 
+    to {transform: scale(1)}
+}
