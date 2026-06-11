@@ -205,9 +205,14 @@ function viewPost(realIndex) {
     const singlePost = document.getElementById('single-post');
     singlePost.style.display = 'block';
     
-    const textOnly = post.content.replace(/<[^>]*>?/gm, '');
-    const wordCount = textOnly.split(/\s+/).length;
-    const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+// Odstránime HTML značky a nahradíme ich medzerou (aby sa slová nezlepili)
+    const textOnly = post.content.replace(/<[^>]+>/g, ' ').trim();
+    // Rozdelíme text podľa medzier a odfiltrujeme prázdne položky
+    const words = textOnly.split(/\s+/).filter(word => word.length > 0);
+    const wordCount = words.length;
+    
+    // Rýchlosť čítania: 230 slov za minútu (trochu rýchlejší odhad pre slovenský text)
+    const readingTime = Math.max(1, Math.ceil(wordCount / 230));
 
     // V detaile článku sa použije vždy plný, dlhý názov "title"
     document.getElementById('post-full-title').innerText = post.title;
