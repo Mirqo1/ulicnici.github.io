@@ -99,10 +99,15 @@ main { max-width: 1200px; margin: 30px auto; padding: 0 20px; flex: 1; width: 10
 /* FORMÁTOVANIE OBRÁZKOV V ČLÁNKU */
 .single-img-container { display: flex; flex-direction: column; align-items: center; margin: 40px 0; }
 .single-img-container img { width: 75%; max-width: 800px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-/* Fotka na stojato (Portrét) */
-.single-img-container.portrait img {
-    width: 50%; /* 50% vyzerá na stojato najlepšie, ale kľudne zmeň na 60% ak chceš širšie */
+/* Fotka na stojato (Portrét) - aplikované priamo na obrázok */
+.single-img-container img.portrait {
+    width: 50%;
     max-width: 500px;
+}
+
+/* Úprava na mobile pre stojaté fotky */
+@media (max-width: 600px) {
+    .single-img-container img.portrait { width: 80%; }
 }
 .img-caption { font-size: 0.9rem; color: var(--text-muted); font-style: italic; margin-top: 10px; text-align: center; }
 
