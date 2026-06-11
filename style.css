@@ -98,17 +98,26 @@ main { max-width: 1200px; margin: 30px auto; padding: 0 20px; flex: 1; width: 10
 
 /* FORMÁTOVANIE OBRÁZKOV V ČLÁNKU */
 .single-img-container { display: flex; flex-direction: column; align-items: center; margin: 40px 0; }
-.single-img-container img { width: 75%; max-width: 800px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-/* Fotka na stojato (Portrét) - aplikované priamo na obrázok */
+
+/* Klasická fotka (na šírku) */
+.single-img-container img { 
+    width: 75%; 
+    max-width: 800px; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+}
+
+/* Fotka na stojato (Portrét) - prebije predchádzajúce pravidlo */
 .single-img-container img.portrait {
-    width: 50%;
-    max-width: 500px;
+    width: 50% !important;
+    max-width: 500px !important;
 }
 
 /* Úprava na mobile pre stojaté fotky */
 @media (max-width: 600px) {
-    .single-img-container img.portrait { width: 80%; }
+    .single-img-container img.portrait { width: 80% !important; }
 }
+
 .img-caption { font-size: 0.9rem; color: var(--text-muted); font-style: italic; margin-top: 10px; text-align: center; }
 
 .double-img-container { display: flex; gap: 20px; margin: 40px 0; justify-content: center; }
